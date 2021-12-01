@@ -5,3 +5,7 @@ handles the communication with the TSDs.
 For more info, see the [TCollector Documentation](http://www.opentsdb.net/tcollector.html)
 
 [![Build Status](https://travis-ci.org/OpenTSDB/tcollector.svg?branch=master)](https://travis-ci.org/OpenTSDB/tcollector)
+
+Customizations:
+1. Support python3
+2. Add collects/0/docker_stats.py to collect cpu/mem/io metrics of docker containers.
