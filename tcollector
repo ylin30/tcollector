@@ -41,7 +41,7 @@ test -f "$PROG" || {
 }
 
 which_python () {
-    for python in /usr/bin/python2.7 /usr/bin/python2.6 /usr/bin/python2.5 /usr/bin/python /usr/local/bin/python; do
+    for python in /usr/bin/python /usr/bin/python3.8 /usr/bin/python2.7 /usr/bin/python2.6 /usr/bin/python2.5 /usr/local/bin/python; do
         test -x "$python" && echo "$python" && return
     done
     echo >&2 'Could not find a Python interpreter'
@@ -51,7 +51,7 @@ which_python () {
 PYTHON=$(which_python)
 
 start () {
-    echo "Starting $PROG"
+    echo "Starting $PYTHON $PROG $ARGS"
     # eval is neccesary for zsh support as multiple-word variables are not 
     # split into words by default, see zsh help for SH_WORD_SPLIT.
     eval "$PYTHON $PROG $ARGS" &

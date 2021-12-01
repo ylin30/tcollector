@@ -144,7 +144,7 @@ def main():
         # PM                 : Linux, mpstat output depending on locale
         # .* load            : FreeBSD, to correctly match load averages
         # ,                  : FreeBSD, to correctly match processes: Mem: ARC: and Swap:
-        fields = re.sub("CPU:", "CPU all:", re.sub(r"%( [uni][a-z]+,?)?| AM | PM |.* load |,", "", line)).split()
+        fields = re.sub("CPU:", "CPU all:", re.sub(r"%( [uni][a-z]+,?)?| AM | PM |.* load |,", "", line.decode('utf-8'))).split()
         if len(fields) <= 0:
             continue
 
@@ -169,7 +169,7 @@ def main():
             print("load.5m %s %s" % (timestamp, fields[2]))
             print("load.15m %s %s" % (timestamp, fields[3]))
 
-        elif (re.match("[0-9]+ processes:",line)):
+        elif (re.match("[0-9]+ processes:",line.decode('utf-8'))):
             starting=0
             running=0
             sleeping=0
