@@ -32,9 +32,9 @@ def send_cpu(ts, container_name, stats):
 
 
 def send_mem(ts, container_name, stats):
-    usage = stats['memory_stats']['usage'];
+    usage = stats['memory_stats']['usage'] - stats['memory_stats']['stats']['cache'];
     limit = stats['memory_stats']['limit'];
-    mem_percentage = (usage / limit) * 100
+    mem_percentage = usage / limit
     
     print("docker.memory %d %.2f container=%s" % (ts, mem_percentage, container_name))
 

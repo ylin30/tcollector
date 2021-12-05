@@ -198,6 +198,7 @@ class Collector(object):
             if line:
                 self.datalines.append(line)
                 self.last_datapoint = int(time.time())
+
             self.buffer = self.buffer[idx+1:]
 
     def collect(self):
@@ -240,7 +241,7 @@ class Collector(object):
           cut_off: A UNIX timestamp.  Any value that's older than this will be
             removed from the cache.
         """
-        for key in self.values.keys():
+        for key in list(self.values):
             time = self.values[key][3]
             if time < cut_off:
                 del self.values[key]
@@ -368,22 +369,29 @@ class ReaderThread(threading.Thread):
         # while breaking out every once in a while to setup selects
         # on new children.
         while ALIVE:
-            alc = all_living_collectors()
-            for col in alc:
-                for line in col.collect():
-                    self.process_line(col, line)
+            try:
+                alc = all_living_collectors()
+                for col in alc:
+                    for line in col.collect():
+                        self.process_line(col, line)
 
-            if self.dedupinterval != 0:  # if 0 we do not use dedup
-                now = int(time.time())
-                if now - lastevict_time > self.evictinterval:
-                    lastevict_time = now
-                    now -= self.evictinterval
-                    for col in all_collectors():
-                        col.evict_old_keys(now)
+                if self.dedupinterval != 0:  # if 0 we do not use dedup
+                    now = int(time.time())
+                    if now - lastevict_time > self.evictinterval:
+                        lastevict_time = now
+                        now -= self.evictinterval
+                        for col in all_collectors():
+                            col.evict_old_keys(now)
 
-            # and here is the loop that we really should get rid of, this
-            # just prevents us from spinning right now
-            time.sleep(1)
+                # and here is the loop that we really should get rid of, this
+                # just prevents us from spinning right now
+                time.sleep(1)
+            except Exception as e:
+                LOG.exception("Exception in ReaderThread:%s", e); 
+                sys.stderr.write("Exception in ReaderThread:%s", e);
+            except:
+                LOG.exception("Uncaught exception in ReaderThread"); 
+                sys.stderr.write("Unexpected error in ReaderThread");
 
     def process_line(self, col, line):
         """Parses the given line and appends the result to the reader queue."""
