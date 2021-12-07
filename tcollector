@@ -41,7 +41,7 @@ test -f "$PROG" || {
 }
 
 which_python () {
-    for python in /usr/bin/python /usr/bin/python3.8 /usr/bin/python2.7 /usr/bin/python2.6 /usr/bin/python2.5 /usr/local/bin/python; do
+    for python in /usr/bin/python3 /usr/bin/python3.8 /usr/bin/python2.7 /usr/bin/python2.6 /usr/bin/python2.5 /usr/local/bin/python; do
         test -x "$python" && echo "$python" && return
     done
     echo >&2 'Could not find a Python interpreter'
