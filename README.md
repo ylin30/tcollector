@@ -9,3 +9,24 @@ For more info, see the [TCollector Documentation](http://www.opentsdb.net/tcolle
 Customizations:
 1. Support python3
 2. Add collects/0/docker_stats.py to collect cpu/mem/io metrics of docker containers.
+
+Usages:
+
+1. Prerequsite: 
+
+* Make sure python3 is installed as (/usr/bin/python3)
+
+2. To use TCollector to collect metrics, simply download it and run,
+
+    git clone https://github.com/OpenTSDB/tcollector.git
+    cd tcollector
+    ./tcollector start --host <hostname(default:localhost)> --port <port(default: 4242)>
+    
+3. We suggest to install sysstat to support 'mpstat' which collects nice-reading cpu metrics.
+
+* For Ubuntu:
+    apt-get install sysstat
+
+* For Centos:
+    yum install sysstat
+
