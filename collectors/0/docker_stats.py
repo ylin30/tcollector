@@ -32,11 +32,17 @@ def send_cpu(ts, container_name, stats):
 
 
 def send_mem(ts, container_name, stats):
-    usage = stats['memory_stats']['usage'] - stats['memory_stats']['stats']['cache'];
+    usage = stats['memory_stats']['usage']
+    cache = stats['memory_stats']['stats']['cache'];
+    rss = stats['memory_stats']['stats']['rss'];
     limit = stats['memory_stats']['limit'];
     mem_percentage = usage / limit
+    mem_percentage_cache = cache / limit
+    mem_percentage_rss = rss / limit
     
     print("docker.memory %d %.2f container=%s" % (ts, mem_percentage, container_name))
+    print("docker.memory.cache %d %.2f container=%s" % (ts, mem_percentage_cache, container_name))
+    print("docker.memory.rss %d %.2f container=%s" % (ts, mem_percentage_rss, container_name))
 
 def send_disk_io(ts, container_name, stats):
     io_array = stats['blkio_stats']['io_service_bytes_recursive']
