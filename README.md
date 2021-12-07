@@ -12,17 +12,27 @@ For more info, see the [TCollector Documentation](http://www.opentsdb.net/tcolle
 
 # Usages:
 
-# 1. Prerequsite: 
+## 1. Prerequsite: 
 
 * Make sure python3 is installed as (/usr/bin/python3)
 
-# 2. To use TCollector to collect metrics, simply download it and run,
+## 2. To use TCollector to collect metrics, simply download it and run,
     
      git clone https://github.com/ylin30/tcollector.git
      cd tcollector
      ./tcollector start --host <hostname(default:localhost)> --port <port(default: 4242)>
+     
+To stop tcollector:
+
+     pi@raspberrypi:~/tcollector $ ./tcollector stop
+     /home/pi/tcollector/tcollector.py running
+     Stopping /home/pi/tcollector/tcollector.py
+     Waiting for /home/pi/tcollector/tcollector.py to die..
+     /home/pi/tcollector/tcollector.py running
+     Stopping /home/pi/tcollector/tcollector.py
+     Waiting for /home/pi/tcollector/tcollector.py to die..
     
-# 3. We suggest to install sysstat to support 'mpstat' which collects nice-reading cpu metrics.
+## 3. We suggest to install sysstat to support 'mpstat' which collects nice-reading cpu metrics.
 
 For Ubuntu:
 
@@ -31,4 +41,32 @@ For Ubuntu:
 For Centos:
 
     yum install sysstat
+## 4. To test a individual collector:
 
+There are many builtin collectors in subfolders:
+> * tcollector/collectors/0: 
+> > * each collector is a long-running process.
+> * tcollector/collectors/<number> (e.g., 300, 900): 
+> > * each collector will run periodically every (e.g., 300, 900) seconds.
+    
+To test an individual collector:
+    
+    pi@raspberrypi:~/tcollector/collectors $ PYTHONPATH=.. python 0/sysload.py
+    cpu.usr 1638919195 0.0 cpu=0
+    cpu.nice 1638919195 0.0 cpu=0
+    cpu.sys 1638919195 0.27 cpu=0
+    cpu.irq 1638919195 0.0 cpu=0
+    cpu.idle 1638919195 99.67 cpu=0
+   
+To dry run the whole tcollector:
+    
+    pi@raspberrypi:~/tcollector $ ./tcollector start -d
+    Starting /usr/bin/python3 /home/pi/tcollector/tcollector.py -d
+   
+It will print on screen all output supposed to be sent to remote TSDB:
+    
+    ...
+    put nfs.client.rpc 1638919763 0 op=getattr version=3 host=raspberrypi
+    put nfs.client.rpc 1638919763 0 op=setattr version=3 host=raspberrypi
+    put nfs.client.rpc 1638919763 0 op=lookup version=3 host=raspberrypi
+    ...
