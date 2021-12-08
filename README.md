@@ -41,7 +41,7 @@ For Ubuntu:
 For Centos:
 
     yum install sysstat
-## 4. To test a individual collector:
+## 4. To test an individual collector:
 
 There are many builtin collectors in subfolders:
 > * tcollector/collectors/0: 
@@ -70,3 +70,30 @@ It will print on screen all output supposed to be sent to remote TSDB:
     put nfs.client.rpc 1638919763 0 op=setattr version=3 host=raspberrypi
     put nfs.client.rpc 1638919763 0 op=lookup version=3 host=raspberrypi
     ...
+    
+    
+## 5. common errors
+    
+### 5.1. Permission denied: '/var/run/tcollector.pid'
+    
+        pi@raspberrypi:~/tcollector $ ./tcollector start --host 192.168.1.34 --port 7188
+        Starting /usr/bin/python3 /home/pi/tcollector/tcollector.py --host 192.168.1.34 --port 7188
+        pi@raspberrypi:~/tcollector $ Traceback (most recent call last):
+        File "/home/pi/tcollector/tcollector.py", line 1652, in <module>
+           sys.exit(main(sys.argv))
+        File "/home/pi/tcollector/tcollector.py", line 1161, in main
+           write_pid(options.pidfile)
+        File "/home/pi/tcollector/tcollector.py", line 1378, in write_pid
+           f = open(pidfile, "w")
+        PermissionError: [Errno 13] Permission denied: '/var/run/tcollector.pid'
+
+You need to give permission to '/var/run/tcollector.pid', or change the tcollector.pid location in tcollector.py. 
+    
+        pi@raspberrypi:~/tcollector $ sudo touch /var/run/tcollector.pid
+        pi@raspberrypi:~/tcollector $ ls -l /var/run/tcollector.pid
+        -rw-r--r-- 1 root root 0 Dec  8 17:52 /var/run/tcollector.pid
+        pi@raspberrypi:~/tcollector $ sudo chown pi:pi /var/run/tcollector.pid
+        pi@raspberrypi:~/tcollector $ ./tcollector start --host 192.168.1.34 --port 7188
+        Starting /usr/bin/python3 /home/pi/tcollector/tcollector.py --host 192.168.1.34 --port 7188
+        pi@raspberrypi:~/tcollector $
+    
