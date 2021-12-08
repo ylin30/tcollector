@@ -97,3 +97,6 @@ You need to give permission to '/var/run/tcollector.pid', or change the tcollect
         Starting /usr/bin/python3 /home/pi/tcollector/tcollector.py --host 192.168.1.34 --port 7188
         pi@raspberrypi:~/tcollector $
     
+### 5.2. In case TSDB restarts
+    
+You will send no new data in TSDB if TSDB restarts. TCollector is not smart smart enough yet to reconnect to TSDB if TSDB restarts. So you have restart TCollector in this case. 
