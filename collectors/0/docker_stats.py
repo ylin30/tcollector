@@ -21,14 +21,14 @@ import docker
 
 from collectors.lib import utils
 
-interval = 5  # seconds
+interval = 15  # seconds
 
 def send_cpu(ts, container_name, stats):
     UsageDelta = stats['cpu_stats']['cpu_usage']['total_usage'] - stats['precpu_stats']['cpu_usage']['total_usage']
     #print("delta:%d, currUsage:%d prev:%d container=%s" % (UsageDelta, stats['cpu_stats']['cpu_usage']['total_usage'], stats['precpu_stats']['cpu_usage']['total_usage'], container_name))
     SystemDelta = stats['cpu_stats']['system_cpu_usage'] - stats['precpu_stats']['system_cpu_usage']
     #print("SystemDelta:%d curr:%d prev:%d container=%s" % (SystemDelta, stats['cpu_stats']['system_cpu_usage'], stats['precpu_stats']['system_cpu_usage'], container_name))
-    cpu_percentage = (UsageDelta / SystemDelta) * len(stats['cpu_stats']['cpu_usage']['percpu_usage'])
+    cpu_percentage = (UsageDelta / SystemDelta) * stats['cpu_stats']['online_cpus']
     
     print("docker.cpu %d %.2f container=%s" % (ts, cpu_percentage, container_name))
 
