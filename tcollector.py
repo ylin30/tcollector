@@ -24,6 +24,7 @@ import atexit
 import errno
 import fcntl
 import logging
+from logging.handlers import RotatingFileHandler
 import os
 import random
 import re
@@ -931,7 +932,8 @@ def setup_logging(logfile=DEFAULT_LOG, logstdout=False):
     if logstdout:
         ch = logging.StreamHandler(sys.stdout)
     else:
-        ch = logging.FileHandler(logfile)
+        #ch = logging.FileHandler(logfile)
+        ch = RotatingFileHandler(logfile, maxBytes=2**24, backupCount=5)
 
     ch.setFormatter(logging.Formatter('%(asctime)s %(name)s[%(process)d] '
                                       '%(levelname)s: %(message)s'))

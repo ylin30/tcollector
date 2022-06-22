@@ -22,7 +22,8 @@ import psutil  # Required to 'pip install psutil'
 from collectors.lib import utils
 
 interval = 15  # seconds
-proc_names_monitored = ('tt') # names must be unique
+proc_names_monitored = ('tt', 'ticktock', 'influxd', 'postgres', 'taosd', 'victoria-metrics-prod', 'java') # names must be unique
+
 
 # Loop all processes to find matched process by names.
 # Using tag pid to differentiate processes with the same name.
@@ -31,6 +32,8 @@ def send_memory(ts):
         if p.name() in proc_names_monitored:
             print("proc.mem.rss %d %d proc=%s pid=%d" % (ts, p.memory_info().rss, p.name(), p.pid))
             print("proc.mem.data %d %d proc=%s pid=%d" % (ts, p.memory_info().data, p.name(), p.pid))
+        #else:
+        #    print("proc not in dic: %s" % p.name)
 
 # Create a dict directly with name as key. So it required processes must have unique names.
 # It will be faster since we don't need to loop all processes.

@@ -197,7 +197,7 @@ def main():
         metric = "iostat.part."
 
       device = values[2]
-      if len(values) == 14:
+      if len(values) >= 14:
         # full stats line
         for i in range(11):
           print("%s%s %d %s dev=%s"
