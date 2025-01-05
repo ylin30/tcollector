@@ -29,11 +29,14 @@ proc_names_monitored = ('tt', 'ticktock', 'influxd', 'postgres', 'taosd', 'victo
 # Using tag pid to differentiate processes with the same name.
 def send_memory(ts):
     for p in psutil.process_iter(['pid', 'name', 'memory_info']):
-        if p.name() in proc_names_monitored:
-            print("proc.mem.rss %d %d proc=%s pid=%d" % (ts, p.memory_info().rss, p.name(), p.pid))
-            print("proc.mem.data %d %d proc=%s pid=%d" % (ts, p.memory_info().data, p.name(), p.pid))
-        #else:
-        #    print("proc not in dic: %s" % p.name)
+        try:
+           if p.name() in proc_names_monitored:
+            	print("proc.mem.rss %d %d proc=%s pid=%d" % (ts, p.memory_info().rss, p.name(), p.pid))
+            	print("proc.mem.data %d %d proc=%s pid=%d" % (ts, p.memory_info().data, p.name(), p.pid))
+            #else:
+            #    print("proc not in dic: %s" % p.name)
+        except Exception:
+            pass
 
 # Create a dict directly with name as key. So it required processes must have unique names.
 # It will be faster since we don't need to loop all processes.
